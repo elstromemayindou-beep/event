@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Common helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Services: Publicly readable, admin writeable
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if false; // Add admin logic if needed
+    }
+
+    // Testimonials: Publicly readable
+    match /testimonials/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Calendar Events: Publicly readable, admin writeable
+    match /calendar_events/{id} {
+      allow read: if true;
+      allow write: if false; // Only admin via backend or specific UID
+    }
+
+    // GALLERY: Add filtering support in rules if needed, but existing read is fine
+    match /gallery/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Blog: Publicly readable
+    match /blog/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Bookings: Public create, owner/admin read
+    match /bookings/{bookingId} {
+      function isValidBooking(data) {
+        return data.customerName is string && data.customerName.size() <= 100 &&
+               data.customerEmail is string && data.customerEmail.size() <= 100 &&
+               data.serviceType is string &&
+               data.eventDate is string;
+      }
+
+      allow create: if isValidBooking(request.resource.data);
+      allow read: if isSignedIn() && (resource.data.customerEmail == request.auth.token.email);
+    }
+  }
+}

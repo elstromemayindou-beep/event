@@ -1,0 +1,114 @@
+{
+  "entities": {
+    "Service": {
+      "title": "Service",
+      "description": "An event service offered by Franck Events",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "category": { "type": "string", "enum": ["Planning", "Rental", "Animation", "Decor"] },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["title", "description", "category"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "An event booking request",
+      "type": "object",
+      "properties": {
+        "customerName": { "type": "string" },
+        "customerEmail": { "type": "string" },
+        "eventDate": { "type": "string", "format": "date-time" },
+        "budget": { "type": "number" },
+        "serviceType": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "paid", "cancelled"] },
+        "stripeSessionId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["customerName", "customerEmail", "eventDate", "serviceType"]
+    },
+    "BlogPost": {
+      "title": "Blog Post",
+      "description": "News and updates from Franck Events",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "author": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["title", "content", "author"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Customer feedback",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "content": { "type": "string" },
+        "event": { "type": "string" },
+        "rating": { "type": "number" },
+        "avatarUrl": { "type": "string" }
+      },
+      "required": ["name", "content"]
+    },
+    "GalleryItem": {
+      "title": "Gallery Item",
+      "description": "Photos or TikTok embeds for the portfolio",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["photo", "tiktok"] },
+        "url": { "type": "string" },
+        "caption": { "type": "string" },
+        "category": { "type": "string", "enum": ["Mariage", "Anniversaire", "Professionnel", "Décoration"] },
+        "year": { "type": "number" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["type", "url", "category", "year"]
+    },
+    "CalendarEvent": {
+      "title": "Calendar Event",
+      "description": "Scheduled events shown on the calendar",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "description": { "type": "string" },
+        "type": { "type": "string", "enum": ["Mariage", "Public", "Privé", "Pro"] },
+        "location": { "type": "string" }
+      },
+      "required": ["title", "date", "type"]
+    }
+  },
+  "firestore": {
+    "calendar_events": {
+      "schema": "CalendarEvent",
+      "description": "Events for the interactive calendar"
+    },
+    "services": {
+      "schema": "Service",
+      "description": "List of services offered"
+    },
+    "bookings": {
+      "schema": "Booking",
+      "description": "User event bookings"
+    },
+    "blog": {
+      "schema": "BlogPost",
+      "description": "Blog posts"
+    },
+    "testimonials": {
+      "schema": "Testimonial",
+      "description": "Client testimonials"
+    },
+    "gallery": {
+      "schema": "GalleryItem",
+      "description": "Portfolio gallery items"
+    }
+  }
+}
